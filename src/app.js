@@ -4,6 +4,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
+const authRouter = require('./auth/auth-router.js');
+const playlistsRouter = require('./playlists/playlists-router')
+const tracksRouter = require('./tracks/tracks-router')
+const usersRouter = require('./users/users-router')
 
 const app = express();
 
@@ -15,9 +19,10 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('Hello, boilerplate!')
-})
+app.use('/auth', authRouter)
+app.use('/playlists', playlistsRouter)
+app.use('/tracks', tracksRouter)
+app.use('/users', usersRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response
