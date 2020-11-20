@@ -8,8 +8,7 @@ const PlaylistsService = {
             .select(
                 'play.id',
                 'play.name',
-                'play.tracks',
-                db.raw(`count(DISTINCT trax) AS number_of_tracks`),
+                'play.number_of_tracks',
                 db.raw(
                     `json_strip_nulls(
                     json_build_object(

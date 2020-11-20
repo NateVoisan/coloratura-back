@@ -49,7 +49,7 @@ playlistsRouter.route('/create/new')
         .catch(next)
     })
 
-playlistsRouter.route('/:playlist_id/tracks/')
+playlistsRouter.route('/:playlist_id')
     .all(requireAuth)
     .all(checkPlaylistExists)
     .get((req, res, next) => {
