@@ -10,27 +10,11 @@ const TracksService = {
                 'trax.playlist_id',
                 'trax.title',
                 'trax.artist',
-                db.raw(
-                    `json_strip_nulls(
-                        row_to_json(
-                            (SELECT tmp FROM (
-                                SELECT
-                                    usr.id,
-                                    usr.user_name
-                            ) tmp)
-                        )
-                    )AS "user"`
-                )
-            )
-            .leftJoin(
-                'coloratura_users AS usr',
-                'trax.user_id',
-                'usr.id',
             )
             .where('trax.id', id)
             .first()
     },
-    insertTracks(db, newTrack) {
+    insertTrack(db, newTrack) {
         return db
             .insert(newTrack)
             .into('coloratura_tracks')
@@ -41,17 +25,13 @@ const TracksService = {
             )
     },
     serializeTrack(track) {
-        const { user } = track
+        // const { user } = track
         return {
             id: track.id,
             link: xss(track.link),
             title: xss(track.title),
             artist: xss(track.artist),
             playlist_id: track.playlist_id,
-            user: {
-                id: user.id,
-                user_name: user.user_name
-            },
         }
     }
 }

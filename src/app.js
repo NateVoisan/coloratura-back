@@ -21,6 +21,7 @@ app.use(cors());
 
 app.use('/auth', authRouter)
 app.use('/playlists', playlistsRouter)
+app.use('/playlist', playlistsRouter)
 app.use('/tracks', tracksRouter)
 app.use('/users', usersRouter)
 

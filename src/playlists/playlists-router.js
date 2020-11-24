@@ -5,20 +5,49 @@ const path = require('path')
 const { getAllPlaylists } = require('./playlists-service')
 
 const playlistsRouter = express.Router()
+const jsonParser = express.json();
+
 
 playlistsRouter.route('/:playlist_id')
     .all(requireAuth)
     .all(checkPlaylistExists)
-    .get((req, res) => {
-        console.log(req.params.playlist_id)
-        res.json(PlaylistsService.serializePlaylist(res.playlist))
+    .get((req, res, next) => {
+        console.log("req.params ", req.params.playlist_id)
+        PlaylistsService.getPlaylist(req.app.get('db'), req.params.playlist_id)
+            .then(data => {
+                res.json(PlaylistsService.serializePlaylist(data))
+            })
+            .catch(next);
+    })
+
+playlistsRouter.route('/deleteplaylist/:playlist_id')
+    .all(requireAuth)
+    .all(checkPlaylistExists)
+    .delete((req, res, next) => {
+        PlaylistsService.deletePlaylist(req.app.get('db'), req.params.playlist_id)
+            .then(data => {
+                console.log(data)
+                res.status(204).end()
+            })
+            .catch(next);
+    })
+
+playlistsRouter.route('/deletetrack/:trackId')
+    .all(requireAuth)
+    .delete((req, res, next) => {
+        PlaylistsService.deleteTrack(req.app.get('db'), req.params.trackId)
+            .then(data => {
+                console.log(data)
+                res.status(204).end()
+            })
+            .catch(next);
     })
 
 playlistsRouter.route('/')
     .all(requireAuth)
     .get((req, res) => {
-        PlaylistsService.getAllPlaylists(req.app.get('db'))
-            .then(playlists => {
+        PlaylistsService.getAllPlaylists(req.app.get('db'), req.user.id)
+            .then(playlists => {console.log('this one is /')
                 res.json(playlists.map(PlaylistsService.serializePlaylist))
             })
     })
@@ -30,7 +59,7 @@ playlistsRouter.route('/create/new')
         const newPlaylist = { name }
 
         for (const [key, value] of Object.entries(newPlaylist))
-            if(value == null)
+            if (value == null)
                 return res.status(400).json({
                     error: `Missing '${key}' in request body`
                 })
@@ -40,16 +69,16 @@ playlistsRouter.route('/create/new')
             req.app.get('db'),
             newPlaylist
         )
-        .then(play => {
-            res
-                .status(201)
-                .location(path.posix.join(req.originalUrl, `/${play.id}`))
-                .json(PlaylistsService.serializePlaylist(play))
-        })
-        .catch(next)
+            .then(play => {
+                res
+                    .status(201)
+                    .location(path.posix.join(req.originalUrl, `/${play.id}`))
+                    .json(PlaylistsService.serializePlaylist(play))
+            })
+            .catch(next)
     })
 
-playlistsRouter.route('/:playlist_id')
+playlistsRouter.route('/:playlist_id/tracks')
     .all(requireAuth)
     .all(checkPlaylistExists)
     .get((req, res, next) => {
@@ -57,20 +86,21 @@ playlistsRouter.route('/:playlist_id')
             req.app.get('db'),
             req.params.playlist_id
         )
-            .then(tracks => {
+        
+            .then(tracks => {console.log('this one is /:playlist_id/tracks')
                 res.json(tracks.map(PlaylistsService.serializePlaylistTrack))
             })
             .catch(next)
     })
 
-playlistsRouter.route('/')
-    .get((req, res, next) => {
-        PlaylistsService.getAllPlaylists(req.app.get('db'))
-            .then(playlists => {
-                res.json(playlists.map(PlaylistsService.serializePlaylist))
-            })
-            .catch(next)
-    })
+// playlistsRouter.route('/')
+//     .get((req, res, next) => {
+//         PlaylistsService.getAllPlaylists(req.app.get('db'))
+//             .then(playlists => {
+//                 res.json(playlists.map(PlaylistsService.serializePlaylist))
+//             })
+//             .catch(next)
+//     })
 
 async function checkPlaylistExists(req, res, next) {
     try {
@@ -78,6 +108,7 @@ async function checkPlaylistExists(req, res, next) {
             req.app.get('db'),
             req.params.playlist_id
         )
+        console.log(playlist, 'playlist getbyId')
         if (!playlist)
             return res.status(404).json({
                 error: `Playlist doesn't exist`

@@ -12,15 +12,14 @@ tracksRouter
         res.send('pls gib tracks')
     })
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
-        const { playlist_id, link } = req.body
-        const newTrack = { playlist_id, link }
-
+        const { playlist_id, link, artist, title } = req.body
+        const newTrack = { playlist_id, link, artist, title }
+        console.log(newTrack)
         for (const [key, value] of Object.entries(newTrack))
             if(value == null)
                 return res.status(400).json({
                     error: `Missing '${key}' in request body`
                 })
-        newTrack.user_id = req.user.user_id
 
         TracksService.insertTrack(
             req.app.get('db'),

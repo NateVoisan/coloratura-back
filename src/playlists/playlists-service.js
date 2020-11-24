@@ -2,7 +2,7 @@ const xss = require('xss')
 const playlistsRouter = require('./playlists-router')
 
 const PlaylistsService = {
-    getAllPlaylists(db) {
+    getAllPlaylists(db, creatorId) {
         return db
             .from('coloratura_playlists AS play')
             .select(
@@ -29,6 +29,14 @@ const PlaylistsService = {
                 'usr.id',
             )
             .groupBy('play.id', 'usr.id')
+            .where('play.creator', creatorId)
+    },
+    getPlaylist(db, id) {
+        return db
+            .select('*')
+            .from('coloratura_playlists AS play')
+            .where('play.id', id)
+            .first()
     },
     getById(db, id) {
         return db
@@ -40,29 +48,6 @@ const PlaylistsService = {
         return db
             .from('coloratura_tracks AS trax')
             .where('trax.playlist_id', playlist_id)
-            // .select(
-            //     'trax.id',
-            //     'trax.link',
-            //     'trax.title',
-            //     'trax.artist',
-            // ),
-            // db.raw(
-            //     `json_strip_nulls(
-            //         row_to_json(
-            //             (SELECT tmp FROM (
-            //                 SELECT
-            //                     usr.id,
-            //                     usr.user_name,
-            //             ) tmp)
-            //         )
-            //     ) AS "user"`
-            // )
-            // .where('trax.playlist_id', playlist_id)
-            // .leftJoin(
-            //     'coloratura_users AS usr',
-            //     'usr.id'
-            // )
-            // .groupBy('trax.id', 'usr.id')
     },
     insertPlaylist(db, newPlaylist) {
         return db
@@ -73,6 +58,18 @@ const PlaylistsService = {
             .then(playlist =>
                 PlaylistsService.getById(db, playlist.id)    
             )
+    },
+    deletePlaylist(db, playlist_id) {
+        return db
+            .from('coloratura_playlists')
+            .where('id', playlist_id)
+            .del()
+    },
+    deleteTrack(db, trackId) {
+        return db
+            .from('coloratura_tracks')
+            .where('id', trackId)
+            .del()
     },
     serializePlaylist(playlist) {
         const { creator } = playlist
