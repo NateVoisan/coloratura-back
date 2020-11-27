@@ -5,8 +5,9 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const authRouter = express.Router()
 const jsonBodyParser = express.json();
 
-authRouter
-    .post('/signin', jsonBodyParser, (req, res, next) => {
+// Handle posting the signin data to the auth router for verification
+
+authRouter.post('/signin', jsonBodyParser, (req, res, next) => {
         const { user_name, password } = req.body
         const signInUser = { user_name, password }
 
@@ -42,6 +43,8 @@ authRouter
             })
             .catch(next)
     })
+
+// Handle the refresh token with auth router when idle timeout
 
 authRouter.post('/refresh', requireAuth, (req, res) => {
     const sub = req.user.user_name

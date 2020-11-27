@@ -2,18 +2,8 @@ function makeUsersArray() {
     return [
         {
             id: 1,
-            user_name: 'test-user-1',
-            password: 'password'
-        },
-        {
-            id: 2,
-            user_name: 'test-user-2',
-            password: 'password'
-        },
-        {
-            id: 3,
-            user_name: 'test-user-3',
-            password: 'password'
+            user_name: 'testuser01',
+            password: 'testuser01'
         }
     ]
 }
@@ -25,12 +15,6 @@ function makePlaylistsArray(users) {
             name: 'Groovy Jams',
             number_of_tracks: 4,
             creator: users[0].id
-        },
-        {
-            id: 2,
-            name: 'Speed Beats',
-            number_of_tracks: 2,
-            creator: users[1].id
         }
     ]
 }
@@ -43,13 +27,6 @@ function makeTracksArray(users, playlists) {
             title: 'Hey Jude',
             artist: 'Beatles',
             playlist_id: 1
-        },
-        {
-            id: 2,
-            link: 'www.soundcloud.com',
-            title: 'Iron Man',
-            artist: 'Black Sabbath',
-            playlist_id: 2
         }
     ]
 }
@@ -67,11 +44,9 @@ function makeExpectedPlaylist(users, playlist, tracks = []) {
         name: playlist.name,
         number_of_tracks: playlist.number_of_tracks,
         creator: playlist.creator,
-        date_created: playlist.date_created.toISOString(),
         creator: {
             id: creator.id,
             user_name: creator.user_name,
-            date_created: creator.date_created.toISOString()
         }
     }
 }
@@ -87,12 +62,7 @@ function makeExpectedPlaylistTracks(users, playlistId, tracks) {
             link: track.link,
             title: track.title,
             artist: track.artist,
-            playlist_id: track.playlist_id,
-            user: {
-                id: trackUser.id,
-                user_name: trackUser.user_name,
-                date_created: trackUser.date_created.toISOString()
-            }
+            playlist_id: track.playlist_id
         }
     })
 }
@@ -101,9 +71,8 @@ function makeMaliciousPlaylist(user) {
     const maliciousPlaylist = {
         id: 911,
         name: 'something',
-        number_of_tracks: 'four',
+        number_of_tracks: 4,
         creator: user.id,
-        date_created: new Date()
     }
     const expectedPlaylist = {
         ...makeExpectedPlaylist([user], maliciousPlaylist),

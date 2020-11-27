@@ -6,6 +6,8 @@ const UsersService = require('./users-service')
 const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
+// Route used for getting the user id
+
 usersRouter
     // .all(requireAuth)
     .get('/:id', (req, res, next) => {
@@ -16,6 +18,8 @@ usersRouter
         })
         .catch(next)
     })
+
+// Route used for posting the user's username and password
 
 usersRouter
     .post('/', jsonBodyParser, (req, res, next) => {

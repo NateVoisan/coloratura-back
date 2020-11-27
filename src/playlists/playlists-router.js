@@ -7,12 +7,12 @@ const { getAllPlaylists } = require('./playlists-service')
 const playlistsRouter = express.Router()
 const jsonParser = express.json();
 
+// Route used for getting a single playlist for the user
 
 playlistsRouter.route('/:playlist_id')
     .all(requireAuth)
     .all(checkPlaylistExists)
     .get((req, res, next) => {
-        console.log("req.params ", req.params.playlist_id)
         PlaylistsService.getPlaylist(req.app.get('db'), req.params.playlist_id)
             .then(data => {
                 res.json(PlaylistsService.serializePlaylist(data))
@@ -20,28 +20,32 @@ playlistsRouter.route('/:playlist_id')
             .catch(next);
     })
 
+// Route used for deleting a selected playlist for the user
+
 playlistsRouter.route('/deleteplaylist/:playlist_id')
     .all(requireAuth)
     .all(checkPlaylistExists)
     .delete((req, res, next) => {
         PlaylistsService.deletePlaylist(req.app.get('db'), req.params.playlist_id)
             .then(data => {
-                console.log(data)
                 res.status(204).end()
             })
             .catch(next);
     })
+
+// Route used for deleting a selected track from a playlist for a user
 
 playlistsRouter.route('/deletetrack/:trackId')
     .all(requireAuth)
     .delete((req, res, next) => {
         PlaylistsService.deleteTrack(req.app.get('db'), req.params.trackId)
             .then(data => {
-                console.log(data)
                 res.status(204).end()
             })
             .catch(next);
     })
+
+// Route used for getting all of the playlists
 
 playlistsRouter.route('/')
     .all(requireAuth)
@@ -51,6 +55,8 @@ playlistsRouter.route('/')
                 res.json(playlists.map(PlaylistsService.serializePlaylist))
             })
     })
+
+// Route used for creating a new playlist for the user and posting it to the database
 
 playlistsRouter.route('/create/new')
     .all(requireAuth)
@@ -78,6 +84,8 @@ playlistsRouter.route('/create/new')
             .catch(next)
     })
 
+// Route used for getting all of the tracks pertaining to the selected playlist
+
 playlistsRouter.route('/:playlist_id/tracks')
     .all(requireAuth)
     .all(checkPlaylistExists)
@@ -93,14 +101,7 @@ playlistsRouter.route('/:playlist_id/tracks')
             .catch(next)
     })
 
-// playlistsRouter.route('/')
-//     .get((req, res, next) => {
-//         PlaylistsService.getAllPlaylists(req.app.get('db'))
-//             .then(playlists => {
-//                 res.json(playlists.map(PlaylistsService.serializePlaylist))
-//             })
-//             .catch(next)
-//     })
+// Function used for checking if a selected playlist even exists before making a call
 
 async function checkPlaylistExists(req, res, next) {
     try {
@@ -108,7 +109,6 @@ async function checkPlaylistExists(req, res, next) {
             req.app.get('db'),
             req.params.playlist_id
         )
-        console.log(playlist, 'playlist getbyId')
         if (!playlist)
             return res.status(404).json({
                 error: `Playlist doesn't exist`

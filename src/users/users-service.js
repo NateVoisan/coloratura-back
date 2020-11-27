@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const xss = require('xss')
 
+// Scripts used for interacting with the database regarding users
+
 const UsersService = {
     hasUserWithUserName(db, user_name) {
         return db('coloratura_users')

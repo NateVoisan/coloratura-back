@@ -1,5 +1,7 @@
 const AuthService = require('../auth/auth-service')
 
+// Handle the basic auth functions requiring authentication credentials
+
 function requireAuth(req, res, next) {
     const authToken = req.get('Authorization') || ''
 

@@ -6,6 +6,8 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const tracksRouter = express.Router()
 const jsonBodyParser = express.json()
 
+// Route used for getting tracks
+
 tracksRouter
     .route('/')
     .get((req, res, next) => {
@@ -14,7 +16,6 @@ tracksRouter
     .post(requireAuth, jsonBodyParser, (req, res, next) => {
         const { playlist_id, link, artist, title } = req.body
         const newTrack = { playlist_id, link, artist, title }
-        console.log(newTrack)
         for (const [key, value] of Object.entries(newTrack))
             if(value == null)
                 return res.status(400).json({

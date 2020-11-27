@@ -1,6 +1,8 @@
 const xss = require('xss')
 const playlistsRouter = require('./playlists-router')
 
+// SQL scripts used for interacting with the database
+
 const PlaylistsService = {
     getAllPlaylists(db, creatorId) {
         return db

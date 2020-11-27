@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 
+// Handle the auth services for user credentials
+
 const AuthService = {
     getUserWithUserName(db, user_name) {
         return db('coloratura_users')
