@@ -5,4 +5,4 @@ module.exports = {
     TEST_DATABASE_URL: process.env.TEST_DATABASE_URL || 'postgresql://postgres@localhost/coloratura-test',
     JWT_SECRET: process.env.JWT_SECRET || 'super-secret',
     JWT_EXPIRY: process.env.JWT_EXPIRY || '3h'
-  }
+  };

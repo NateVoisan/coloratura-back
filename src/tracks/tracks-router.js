@@ -1,12 +1,10 @@
-const express = require('express')
-const path = require('path')
-const TracksService = require('./tracks-service')
-const { requireAuth } = require('../middleware/jwt-auth')
+const express = require('express');
+const path = require('path');
+const TracksService = require('./tracks-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 
-const tracksRouter = express.Router()
-const jsonBodyParser = express.json()
-
-// Route used for getting tracks
+const tracksRouter = express.Router();
+const jsonBodyParser = express.json();
 
 tracksRouter
     .route('/')
@@ -33,6 +31,6 @@ tracksRouter
                 .json(TracksService.serializeTrack(track))
         })
         .catch(next)
-    })
+    });
 
-module.exports = tracksRouter
+module.exports = tracksRouter;

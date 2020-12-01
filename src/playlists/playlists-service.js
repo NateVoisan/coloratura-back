@@ -1,7 +1,5 @@
-const xss = require('xss')
-const playlistsRouter = require('./playlists-router')
-
-// SQL scripts used for interacting with the database
+const xss = require('xss');
+const playlistsRouter = require('./playlists-router');
 
 const PlaylistsService = {
     getAllPlaylists(db, creatorId) {
@@ -95,6 +93,6 @@ const PlaylistsService = {
             artist: xss(track.artist)
         }
     },
-}
+};
 
-module.exports = PlaylistsService
+module.exports = PlaylistsService;

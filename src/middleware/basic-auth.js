@@ -1,6 +1,4 @@
-const AuthService = require('../auth/auth-service')
-
-// Handle the basic auth functions requiring authentication credentials
+const AuthService = require('../auth/auth-service');
 
 function requireAuth(req, res, next) {
     const authToken = req.get('Authorization') || ''
@@ -36,9 +34,9 @@ function requireAuth(req, res, next) {
                     next()
                 })
         })
-        .catch(next)
-}
+        .catch(next);
+};
 
 module.exports = {
     requireAuth,
-}
+};

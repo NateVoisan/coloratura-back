@@ -1,13 +1,11 @@
-const express = require('express')
-const PlaylistsService = require('./playlists-service')
-const { requireAuth } = require('../middleware/jwt-auth')
-const path = require('path')
-const { getAllPlaylists } = require('./playlists-service')
+const express = require('express');
+const PlaylistsService = require('./playlists-service');
+const { requireAuth } = require('../middleware/jwt-auth');
+const path = require('path');
+const { getAllPlaylists } = require('./playlists-service');
 
-const playlistsRouter = express.Router()
+const playlistsRouter = express.Router();
 const jsonParser = express.json();
-
-// Route used for getting a single playlist for the user
 
 playlistsRouter.route('/:playlist_id')
     .all(requireAuth)
@@ -18,9 +16,7 @@ playlistsRouter.route('/:playlist_id')
                 res.json(PlaylistsService.serializePlaylist(data))
             })
             .catch(next);
-    })
-
-// Route used for deleting a selected playlist for the user
+    });
 
 playlistsRouter.route('/deleteplaylist/:playlist_id')
     .all(requireAuth)
@@ -31,9 +27,7 @@ playlistsRouter.route('/deleteplaylist/:playlist_id')
                 res.status(204).end()
             })
             .catch(next);
-    })
-
-// Route used for deleting a selected track from a playlist for a user
+    });
 
 playlistsRouter.route('/deletetrack/:trackId')
     .all(requireAuth)
@@ -43,9 +37,7 @@ playlistsRouter.route('/deletetrack/:trackId')
                 res.status(204).end()
             })
             .catch(next);
-    })
-
-// Route used for getting all of the playlists
+    });
 
 playlistsRouter.route('/')
     .all(requireAuth)
@@ -54,9 +46,7 @@ playlistsRouter.route('/')
             .then(playlists => {console.log('this one is /')
                 res.json(playlists.map(PlaylistsService.serializePlaylist))
             })
-    })
-
-// Route used for creating a new playlist for the user and posting it to the database
+    });
 
 playlistsRouter.route('/create/new')
     .all(requireAuth)
@@ -82,9 +72,7 @@ playlistsRouter.route('/create/new')
                     .json(PlaylistsService.serializePlaylist(play))
             })
             .catch(next)
-    })
-
-// Route used for getting all of the tracks pertaining to the selected playlist
+    });
 
 playlistsRouter.route('/:playlist_id/tracks')
     .all(requireAuth)
@@ -99,9 +87,7 @@ playlistsRouter.route('/:playlist_id/tracks')
                 res.json(tracks.map(PlaylistsService.serializePlaylistTrack))
             })
             .catch(next)
-    })
-
-// Function used for checking if a selected playlist even exists before making a call
+    });
 
 async function checkPlaylistExists(req, res, next) {
     try {
@@ -117,7 +103,7 @@ async function checkPlaylistExists(req, res, next) {
         next()
     } catch (error) {
         next(error)
-    }
-}
+    };
+};
 
-module.exports = playlistsRouter
+module.exports = playlistsRouter;

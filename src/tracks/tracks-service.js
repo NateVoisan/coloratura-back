@@ -1,6 +1,4 @@
-const xss = require('xss')
-
-// SQL scripts used for track related tasks with the database
+const xss = require('xss');
 
 const TracksService = {
     getById(db, id) {
@@ -35,6 +33,6 @@ const TracksService = {
             playlist_id: track.playlist_id,
         }
     }
-}
+};
 
-module.exports = TracksService
+module.exports = TracksService;

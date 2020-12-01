@@ -1,7 +1,5 @@
-const bcrypt = require('bcryptjs')
-const xss = require('xss')
-
-// Scripts used for interacting with the database regarding users
+const bcrypt = require('bcryptjs');
+const xss = require('xss');
 
 const UsersService = {
     hasUserWithUserName(db, user_name) {
@@ -44,6 +42,6 @@ const UsersService = {
             user_name: xss(user.user_name),
         }
     },
-}
+};
 
-module.exports = UsersService
+module.exports = UsersService;
